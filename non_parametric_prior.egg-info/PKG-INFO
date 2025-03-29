@@ -1,0 +1,9 @@
+Metadata-Version: 2.4
+Name: non-parametric-prior
+Version: 0.1.0
+Summary: Add your description here
+Requires-Python: <3.12,>=3.10
+Requires-Dist: elicito
+Requires-Dist: bayesflow==1.1.6
+Requires-Dist: tensorflow>=2.14
+Requires-Dist: tensorflow-probability>=0.23

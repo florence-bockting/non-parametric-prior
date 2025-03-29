@@ -1,0 +1,4 @@
+elicito
+bayesflow==1.1.6
+tensorflow>=2.14
+tensorflow-probability>=0.23
