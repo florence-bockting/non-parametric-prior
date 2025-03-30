@@ -47,16 +47,12 @@ class BinomialModel:
             upper_thres=total_count,
             temp=temp
         )
-        # combine parameter and model uncertainty
-        n_batch, n_sample_prior, n_obs = ypred.shape
-        ypred_reshaped = tf.reshape(ypred, (n_batch, n_sample_prior*n_obs))
-        # select the 25th and 75th-quantile observation
-        y_quantiles = tfp.stats.percentile(ypred_reshaped, [25, 75], axis=-1)
-        y_quantiles = tf.transpose(y_quantiles, perm=[1,0])
 
         return dict(
-            y_q25 = tf.expand_dims(y_quantiles[:,0], -1),
-            y_q75 = tf.expand_dims(y_quantiles[:,1], -1),
+            y_q25 = ypred[:,:,0],
+            y_q75 = ypred[:,:,1],
+            b0 = prior_samples[:,:,0],
+            b1 = prior_samples[:,:,1],
         )
 
 def design_matrix(n: int) -> tf.Tensor:
@@ -73,7 +69,7 @@ def design_matrix(n: int) -> tf.Tensor:
     :
         design matrix
     """
-    x_std = tfd.Normal(0., 1.).sample(n)
+    x_std = tfd.Normal(0., 1.).quantile([0.25, 0.75])
     return tf.stack([[1.]*len(x_std), x_std], axis=-1)
 
 ground_truth = {
@@ -96,7 +92,7 @@ model = el.model(
 targets = [
         el.target(
         name=f"y_q{i}",
-        query=el.queries.quantiles((0.25, 0.25, 0.5, 0.75, 0.95)),
+        query=el.queries.quantiles((0.05, 0.25, 0.5, 0.75, 0.95)),
         loss=el.losses.MMD2(kernel="energy"),
         weight=1.0
     ) for i in [25, 75]
@@ -116,7 +112,7 @@ optimizer = el.optimizer(
 trainer=el.trainer(
     method="deep_prior",
     seed=0,
-    epochs=600,
+    epochs=500,
     progress=1
 )
 
@@ -150,15 +146,21 @@ eliobj = el.Elicit(
     network=normalizing_flow,
 )
 
-eliobj.fit()
+eliobj.fit()#parallel=el.utils.parallel(runs=4))
+
+
+el.plots.hyperparameter(eliobj)
+el.plots.loss(eliobj)
+el.plots.elicits(eliobj)
+el.plots.prior_marginals(eliobj)
 
 #%% Update: Optimize on the parameter space
-eliobj_v2 = eliobj.copy()
+eliobj_v2 = deepcopy(eliobj)
 
 targets2 = [
     el.target(
         name=f"b{i}",
-        query=el.queries.quantiles((0.25, 0.25, 0.5, 0.75, 0.95)),
+        query=el.queries.quantiles((0.05, 0.25, 0.5, 0.75, 0.95)),
         loss=el.losses.MMD2(kernel="energy"),
         weight=1.0
     ) for i in [0,1]
@@ -166,3 +168,8 @@ targets2 = [
 
 eliobj_v2.update(targets=targets2)
 eliobj_v2.fit()
+
+el.plots.hyperparameter(eliobj_v2)
+el.plots.loss(eliobj_v2)
+el.plots.elicits(eliobj_v2)
+el.plots.prior_joint(eliobj_v2)
