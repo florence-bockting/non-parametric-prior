@@ -47,16 +47,13 @@ class BinomialModel:
             upper_thres=total_count,
             temp=temp
         )
-        # combine parameter and model uncertainty
-        n_batch, n_sample_prior, n_obs = ypred.shape
-        ypred_reshaped = tf.reshape(ypred, (n_batch, n_sample_prior*n_obs))
-        # select the 25th and 75th-quantile observation
-        y_quantiles = tfp.stats.percentile(ypred_reshaped, [25, 75], axis=-1)
-        y_quantiles = tf.transpose(y_quantiles, perm=[1,0])
+
 
         return dict(
-            y_q25 = tf.expand_dims(y_quantiles[:,0], -1),
-            y_q75 = tf.expand_dims(y_quantiles[:,1], -1),
+            y_q25 = tf.expand_dims(ypred[:,:,0], -1),
+            y_q75 = tf.expand_dims(ypred[:,:,1], -1),
+            b0 = prior_samples[:,:,0],
+            b1 = prior_samples[:,:,1],
         )
 
 def design_matrix(n: int) -> tf.Tensor:
@@ -73,7 +70,7 @@ def design_matrix(n: int) -> tf.Tensor:
     :
         design matrix
     """
-    x_std = tfd.Normal(0., 1.).sample(n)
+    x_std = tfd.Normal(0., 1.).quantile([0.25, 0.75])
     return tf.stack([[1.]*len(x_std), x_std], axis=-1)
 
 ground_truth = {
@@ -96,7 +93,7 @@ model = el.model(
 targets = [
         el.target(
         name=f"y_q{i}",
-        query=el.queries.quantiles((0.25, 0.25, 0.5, 0.75, 0.95)),
+        query=el.queries.quantiles((0.05, 0.25, 0.5, 0.75, 0.95)),
         loss=el.losses.MMD2(kernel="energy"),
         weight=1.0
     ) for i in [25, 75]
@@ -152,13 +149,18 @@ eliobj = el.Elicit(
 
 eliobj.fit()
 
+el.plots.hyperparameter(eliobj)
+el.plots.loss(eliobj)
+el.plots.elicits(eliobj)
+el.plots.prior_joint(eliobj)
+
 #%% Update: Optimize on the parameter space
-eliobj_v2 = eliobj.copy()
+eliobj_v2 = deepcopy(eliobj)
 
 targets2 = [
     el.target(
         name=f"b{i}",
-        query=el.queries.quantiles((0.25, 0.25, 0.5, 0.75, 0.95)),
+        query=el.queries.quantiles((0.05, 0.25, 0.5, 0.75, 0.95)),
         loss=el.losses.MMD2(kernel="energy"),
         weight=1.0
     ) for i in [0,1]
@@ -166,3 +168,59 @@ targets2 = [
 
 eliobj_v2.update(targets=targets2)
 eliobj_v2.fit()
+
+
+el.plots.hyperparameter(eliobj_v2)
+el.plots.loss(eliobj_v2)
+el.plots.elicits(eliobj_v2)
+el.plots.prior_joint(eliobj_v2)
+
+#%% Update: Compare with parametric prior method
+eliobj_v3 = deepcopy(eliobj)
+
+parameters3 = [
+    el.parameter(
+        name=f"b{i}",
+        family=tfd.Normal,
+        hyperparams=dict(
+            loc=el.hyper(f"mu{i}"),
+            scale=el.hyper(f"sigma{i}", lower=0)
+        ),
+    ) for i in range(2) ]
+
+optimizer3 = el.optimizer(
+    optimizer=tf.keras.optimizers.Adam,
+    learning_rate=0.01,
+    clipnorm=1.0,
+)
+
+trainer3 = el.trainer(
+    method="parametric_prior",
+    seed=0,
+    epochs=400,
+    progress=1
+)
+
+network3 = None
+
+initializer3 = el.initializer(
+        method="sobol",
+        loss_quantile=0,
+        iterations=32,
+        distribution=el.initialization.uniform(radius=2.0, mean=0.0),
+    )
+
+eliobj_v3.update(
+    parameters=parameters3,
+    optimizer=optimizer3,
+    trainer=trainer3,
+    network=network3,
+    initializer=initializer3,
+)
+
+eliobj_v3.fit()
+
+el.plots.hyperparameter(eliobj_v3)
+el.plots.loss(eliobj_v3)
+el.plots.elicits(eliobj_v3)
+el.plots.prior_joint(eliobj_v3)
