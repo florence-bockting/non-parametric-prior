@@ -1,4 +1,3 @@
-main.py
 pyproject.toml
 non_parametric_prior.egg-info/PKG-INFO
 non_parametric_prior.egg-info/SOURCES.txt
