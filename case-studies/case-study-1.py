@@ -154,6 +154,11 @@ el.plots.loss(eliobj)
 el.plots.elicits(eliobj)
 el.plots.prior_marginals(eliobj)
 
+el.plots.hyperparameter(eliobj)
+el.plots.loss(eliobj)
+el.plots.elicits(eliobj)
+el.plots.prior_joint(eliobj)
+
 #%% Update: Optimize on the parameter space
 eliobj_v2 = deepcopy(eliobj)
 
@@ -173,3 +178,55 @@ el.plots.hyperparameter(eliobj_v2)
 el.plots.loss(eliobj_v2)
 el.plots.elicits(eliobj_v2)
 el.plots.prior_joint(eliobj_v2)
+
+
+#%% Update: Compare with parametric prior method
+eliobj_v3 = deepcopy(eliobj)
+
+parameters3 = [
+    el.parameter(
+        name=f"b{i}",
+        family=tfd.Normal,
+        hyperparams=dict(
+            loc=el.hyper(f"mu{i}"),
+            scale=el.hyper(f"sigma{i}", lower=0)
+        ),
+    ) for i in range(2) ]
+
+optimizer3 = el.optimizer(
+    optimizer=tf.keras.optimizers.Adam,
+    learning_rate=0.01,
+    clipnorm=1.0,
+)
+
+trainer3 = el.trainer(
+    method="parametric_prior",
+    seed=0,
+    epochs=400,
+    progress=1
+)
+
+network3 = None
+
+initializer3 = el.initializer(
+        method="sobol",
+        loss_quantile=0,
+        iterations=32,
+        distribution=el.initialization.uniform(radius=2.0, mean=0.0),
+    )
+
+eliobj_v3.update(
+    parameters=parameters3,
+    optimizer=optimizer3,
+    trainer=trainer3,
+    network=network3,
+    initializer=initializer3,
+)
+
+eliobj_v3.fit()
+
+el.plots.hyperparameter(eliobj_v3)
+el.plots.loss(eliobj_v3)
+el.plots.elicits(eliobj_v3)
+el.plots.prior_joint(eliobj_v3)
+
