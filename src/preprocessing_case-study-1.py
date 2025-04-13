@@ -52,3 +52,12 @@ el.plots.prior_joint(
 el.plots.prior_averaging(
     eliobj_clean, height_ratio=[1,1], xlim_weights=0.1,
     save_fig=f"figures/{selected_scenario}_prior_averaging.png")
+
+# compute average training time
+# remove first iteration as it contains compiling time etc.
+time_per_replication = []
+for i in range(len(eliobj.history)):
+    time_per_replication.append(np.sum(eliobj.history[i]["time"]))
+
+print("time avg. :", np.round(np.median(time_per_replication)/60, 2))
+print("time std. :", np.round(np.std(time_per_replication)/60, 2))

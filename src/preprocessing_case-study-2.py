@@ -11,8 +11,8 @@ from src.flag_outliers import flag_small_sd, flag_high_rmse
 #selected_scenario = "normal-skewed-deep_prior-params"
 #selected_scenario = "normal-skewed-deep_prior-elicits"
 #selected_scenario = "normal-skewed-parametric_prior"
-selected_scenario = "normal-correlated-deep_prior-params"
-#selected_scenario = "normal-correlated-deep_prior-elicits"
+#selected_scenario = "normal-correlated-deep_prior-params"
+selected_scenario = "normal-correlated-deep_prior-elicits"
 
 path = f"results/{selected_scenario.split('-')[2]}"
 files = os.listdir(path)
@@ -57,3 +57,12 @@ el.plots.prior_joint(
 el.plots.prior_averaging(
     eliobj_clean, height_ratio=[1,1], xlim_weights=0.1, figsize=(8,5),
     save_fig=f"figures/{selected_scenario}_prior_averaging.png")
+
+# compute average training time
+# remove first iteration as it contains compiling time etc.
+time_per_replication = []
+for i in range(len(eliobj.history)):
+    time_per_replication.append(np.sum(eliobj.history[i]["time"]))
+
+print("time avg. :", np.round(np.median(time_per_replication)/60, 2))
+print("time std. :", np.round(np.std(time_per_replication)/60, 2))

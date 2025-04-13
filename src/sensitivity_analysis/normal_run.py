@@ -50,7 +50,7 @@ run_sensitivity(
 )
 # if you want to use data from manuscript and not rerun fitting
 # use only the following function
-df_sim_res = prep_sensitivity_res()
+df_sim_res = prep_sensitivity_res(scenario=selected_scenario, path="results/sensitivity_analyses/")
 
 # plot results
 plot_sensitivity(

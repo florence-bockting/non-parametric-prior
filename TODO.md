@@ -5,3 +5,6 @@
   - utils.load
   - utils.save
   - __init__ : 188-190
+- add results.zip folder to OSF once the sensitivity analyses are finished
+- informative README
+- 

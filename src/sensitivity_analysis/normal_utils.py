@@ -145,17 +145,11 @@ def run_prior_checks(
 
     eliobj.fit()
 
-    if scenario == "independent":
-        path = (f"sensitivity_normal-{scenario}_{mu0:.2f}_{sigma0:.2f}_{mu1:.2f}_{sigma1:.2f}"
-                +f"_{mu2:.2f}_{sigma2:.2f}_{alpha:.2f}_{beta:.2f}_{varying_target}")
-    if scenario == "correlated":
-        path = (f"sensitivity_normal-{scenario}_{mu0:.2f}_{sigma0:.2f}_{mu1:.2f}_{sigma1:.2f}"
-                + f"_{mu2:.2f}_{sigma2:.2f}_{alpha:.2f}_{beta:.2f}_{cor01:.2f}_{cor02:.2f}_{cor12:.2f}_{varying_target}")
-    if scenario == "skewed":
-        path = (f"sensitivity_normal-{scenario}_{mu0:.2f}_{sigma0:.2f}_{mu1:.2f}_{sigma1:.2f}"
-                + f"_{mu2:.2f}_{sigma2:.2f}_{alpha:.2f}_{beta:.2f}_{skew1:.2f}_{skew2:.2f}_{varying_target}")
+    path = (f"sensitivity_normal-{scenario}_{mu0:.2f}_{sigma0:.2f}_{mu1:.2f}_{sigma1:.2f}"
+            + f"_{mu2:.2f}_{sigma2:.2f}_{alpha:.2f}_{beta:.2f}_{skew1:.2f}_{skew2:.2f}_"
+            + f"{cor01:.2f}_{cor02:.2f}_{cor12:.2f}_{varying_target}")
 
-    eliobj.save(path)
+    eliobj.save(path, overwrite=True)
 
 
 def run_sensitivity(
@@ -334,101 +328,107 @@ def run_sensitivity(
         )
 
     if cor_seq is not None:
-        run_prior_checks(
-            scenario=scenario,
-            seed=seed,
-            varying_target="cor01",
-            mu0=10.0,
-            sigma0=2.5,
-            mu1=7.0,
-            sigma1=1.3,
-            mu2=2.5,
-            sigma2=0.8,
-            alpha=5.0,
-            beta=2.0,
-            cor01=cor_seq,
-            cor02=-0.3,
-            cor12=-0.2,
-            skew1=4.0,
-            skew2=4.0,
-        )
-        run_prior_checks(
-            scenario=scenario,
-            seed=seed,
-            varying_target="cor02",
-            mu0=10.0,
-            sigma0=2.5,
-            mu1=7.0,
-            sigma1=1.3,
-            mu2=2.5,
-            sigma2=0.8,
-            alpha=5.0,
-            beta=2.0,
-            cor01=0.3,
-            cor02=cor_seq,
-            cor12=-0.2,
-            skew1=4.0,
-            skew2=4.0,
-        )
-        run_prior_checks(
-            scenario=scenario,
-            seed=seed,
-            varying_target="cor12",
-            mu0=10.0,
-            sigma0=2.5,
-            mu1=7.0,
-            sigma1=1.3,
-            mu2=2.5,
-            sigma2=0.8,
-            alpha=5.0,
-            beta=2.0,
-            cor01=0.3,
-            cor02=-0.3,
-            cor12=cor_seq,
-            skew1=4.0,
-            skew2=4.0,
-        )
+        for cor in cor_seq:
+            run_prior_checks(
+                scenario=scenario,
+                seed=seed,
+                varying_target="cor01",
+                mu0=10.0,
+                sigma0=2.5,
+                mu1=7.0,
+                sigma1=1.3,
+                mu2=2.5,
+                sigma2=0.8,
+                alpha=5.0,
+                beta=2.0,
+                cor01=cor,
+                cor02=-0.3,
+                cor12=-0.2,
+                skew1=4.0,
+                skew2=4.0,
+            )
+        for cor in cor_seq:
+            run_prior_checks(
+                scenario=scenario,
+                seed=seed,
+                varying_target="cor02",
+                mu0=10.0,
+                sigma0=2.5,
+                mu1=7.0,
+                sigma1=1.3,
+                mu2=2.5,
+                sigma2=0.8,
+                alpha=5.0,
+                beta=2.0,
+                cor01=0.3,
+                cor02=cor,
+                cor12=-0.2,
+                skew1=4.0,
+                skew2=4.0,
+            )
+        for cor in cor_seq:
+            run_prior_checks(
+                scenario=scenario,
+                seed=seed,
+                varying_target="cor12",
+                mu0=10.0,
+                sigma0=2.5,
+                mu1=7.0,
+                sigma1=1.3,
+                mu2=2.5,
+                sigma2=0.8,
+                alpha=5.0,
+                beta=2.0,
+                cor01=0.3,
+                cor02=-0.3,
+                cor12=cor,
+                skew1=4.0,
+                skew2=4.0,
+            )
     if skewness_seq is not None:
-        run_prior_checks(
-            scenario=scenario,
-            seed=seed,
-            varying_target="skew1",
-            mu0=10.0,
-            sigma0=2.5,
-            mu1=7.0,
-            sigma1=1.3,
-            mu2=2.5,
-            sigma2=0.8,
-            alpha=5.0,
-            beta=2.0,
-            cor01=3.0,
-            cor02=-3.0,
-            cor12=-2.0,
-            skew1=skewness_seq,
-            skew2=4.0
-        )
-        run_prior_checks(
-            scenario=scenario,
-            seed=seed,
-            varying_target="skew2",
-            mu0=10.0,
-            sigma0=2.5,
-            mu1=7.0,
-            sigma1=1.3,
-            mu2=2.5,
-            sigma2=0.8,
-            alpha=5.0,
-            beta=2.0,
-            cor01=3.0,
-            cor02=-3.0,
-            cor12=-2.0,
-            skew1=4.0,
-            skew2=skewness_seq,
-        )
+        for skew in skewness_seq:
+            run_prior_checks(
+                scenario=scenario,
+                seed=seed,
+                varying_target="skew1",
+                mu0=10.0,
+                sigma0=2.5,
+                mu1=7.0,
+                sigma1=1.3,
+                mu2=2.5,
+                sigma2=0.8,
+                alpha=5.0,
+                beta=2.0,
+                cor01=3.0,
+                cor02=-3.0,
+                cor12=-2.0,
+                skew1=skew,
+                skew2=4.0
+            )
+        for skew in skewness_seq:
+            run_prior_checks(
+                scenario=scenario,
+                seed=seed,
+                varying_target="skew2",
+                mu0=10.0,
+                sigma0=2.5,
+                mu1=7.0,
+                sigma1=1.3,
+                mu2=2.5,
+                sigma2=0.8,
+                alpha=5.0,
+                beta=2.0,
+                cor01=3.0,
+                cor02=-3.0,
+                cor12=-2.0,
+                skew1=4.0,
+                skew2=skew,
+            )
 
 
 def prep_sensitivity_res(
-    path: str = "./results/deep_prior/"
+    scenario: str, # independent, correlated, skewed
+    path: str = "./results/sensitivity_analyses/"
 ):
     # save results in dictionary
     res_dict = {
@@ -440,7 +440,7 @@ def prep_sensitivity_res(
 
     all_files = os.listdir(path)
     for i, file in enumerate(all_files):
-        if file.startswith("sensitivity_normal-independent"):
+        if file.startswith(f"sensitivity_normal-{scenario}"):
             sensitivity_result = el.utils.load(path + file)
             true_elicited_statistics = sensitivity_result.results[0]["expert_elicited_statistics"]
 
@@ -454,6 +454,11 @@ def prep_sensitivity_res(
             res_dict["sigma2"].append(float(labels[7]))
             res_dict["alpha"].append(float(labels[8]))
             res_dict["beta"].append(float(labels[9]))
+            res_dict["skew1"].append(float(labels[10]))
+            res_dict["skew2"].append(float(labels[11]))
+            res_dict["cor01"].append(float(labels[12]))
+            res_dict["cor02"].append(float(labels[13]))
+            res_dict["cor12"].append(float(labels[14]))
             res_dict["y_group1"].append(true_elicited_statistics["quantiles_y_gr1"][0, :].numpy())
             res_dict["y_group2"].append(true_elicited_statistics["quantiles_y_gr2"][0, :].numpy())
             res_dict["y_group3"].append(true_elicited_statistics["quantiles_y_gr3"][0, :].numpy())
