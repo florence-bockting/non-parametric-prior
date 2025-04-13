@@ -1,12 +1,15 @@
 [project]
 name = "non-parametric-prior"
 version = "0.1.0"
-description = "Add your description here"
+description = "Code and plots for publication 'Expert-elicitation method for non-parametric joint priors using normalizing flows'"
 requires-python = ">=3.10, <3.12"
 dependencies = [
-    "elicito[full]==0.2.0",
     "bayesflow==1.1.6",
     "tensorflow >= 2.14",
     "tensorflow-probability >= 0.23",
     "patsy==1.0.0",
+    "numpy==1.26.4",
+    "silence-tensorflow==1.2.3",
+    "pytest>= 8.1",
+    "elicito[full]==0.3.0",
 ]

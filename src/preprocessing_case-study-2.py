@@ -1,0 +1,59 @@
+import os
+from copy import deepcopy
+import elicito as el
+import numpy as np
+
+from src.flag_outliers import flag_small_sd, flag_high_rmse
+
+#selected_scenario = "normal-independent-deep_prior-params"
+#selected_scenario = "normal-independent-deep_prior-elicits"
+#selected_scenario = "normal-independent-parametric_prior"
+#selected_scenario = "normal-skewed-deep_prior-params"
+#selected_scenario = "normal-skewed-deep_prior-elicits"
+#selected_scenario = "normal-skewed-parametric_prior"
+selected_scenario = "normal-correlated-deep_prior-params"
+#selected_scenario = "normal-correlated-deep_prior-elicits"
+
+path = f"results/{selected_scenario.split('-')[2]}"
+files = os.listdir(path)
+counter = 0
+
+for file in files:
+    if selected_scenario in file:
+        counter += 1
+        if counter == 1:
+            eliobj = el.utils.load(path + "/" + file)
+        else:
+            eliobj2 = el.utils.load(path + "/" + file)
+            eliobj.results.append(eliobj2.results[0])
+            eliobj.history.append(eliobj2.history[0])
+
+##### Quality flag criteria
+outlier_sd = flag_small_sd(eliobj, min_sd=0.2)
+outlier_rmse = flag_high_rmse(eliobj, max_rmse=0.2, plot=True)
+
+outliers = np.unique(np.concatenate([outlier_sd, outlier_rmse]))
+
+eliobj_clean = deepcopy(eliobj)
+eliobj_clean.results = [eliobj.results[i] for i in range(len(eliobj.results)) if i not in outliers]
+eliobj_clean.history = [eliobj.history[i] for i in range(len(eliobj.history)) if i not in outliers]
+
+
+el.plots.loss(
+    eliobj_clean, figsize=(6,2),
+    save_fig=f"figures/{selected_scenario}_loss.png")
+el.plots.elicits(
+    eliobj_clean, figsize=(8,2), cols=5,
+    save_fig=f"figures/{selected_scenario}_elicits.png")
+el.plots.hyperparameter(
+    eliobj_clean, figsize=(6,2),
+    save_fig=f"figures/{selected_scenario}_hyperparameter.png")
+el.plots.prior_marginals(
+    eliobj_clean, figsize=(6,2),
+    save_fig=f"figures/{selected_scenario}_prior_marginals.png")
+el.plots.prior_joint(
+    eliobj_clean, idx=list(range(len(eliobj_clean.history))), figsize=(5,5),
+    save_fig=f"figures/{selected_scenario}_prior_joint.png")
+el.plots.prior_averaging(
+    eliobj_clean, height_ratio=[1,1], xlim_weights=0.1, figsize=(8,5),
+    save_fig=f"figures/{selected_scenario}_prior_averaging.png")

@@ -1,0 +1,8 @@
+bayesflow==1.1.6
+elicito[full]==0.3.0
+numpy==1.26.4
+patsy==1.0.0
+pytest>= 8.1
+silence-tensorflow==1.2.3
+tensorflow >= 2.14
+tensorflow-probability >= 0.23

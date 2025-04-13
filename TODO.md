@@ -1,0 +1,7 @@
+- provide OSF LINK to results in header of binomial_run.py
+- merge all code into one folder called src 
+- remove all "old-..." folders from results
+- reset changes in elicito:
+  - utils.load
+  - utils.save
+  - __init__ : 188-190

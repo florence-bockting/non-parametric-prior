@@ -3,3 +3,5 @@ bayesflow==1.1.6
 tensorflow>=2.14
 tensorflow-probability>=0.23
 patsy==1.0.0
+numpy==1.26.4
+silence-tensorflow==1.2.3

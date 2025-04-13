@@ -8,3 +8,5 @@ Requires-Dist: bayesflow==1.1.6
 Requires-Dist: tensorflow>=2.14
 Requires-Dist: tensorflow-probability>=0.23
 Requires-Dist: patsy==1.0.0
+Requires-Dist: numpy==1.26.4
+Requires-Dist: silence-tensorflow==1.2.3
