@@ -73,11 +73,11 @@ $$
 \mathcal{L}(\lambda) =& 1.0\cdot\text{MMD}^2_b(\{Q_p(y_{gr_1})\}_p, \{Q_p(\hat{y}_{gr_1})\}_p)+
 1.0\cdot\text{MMD}^2_b(\{Q_p(y_{gr_2})\}_p, \{Q_p(\hat{y}_{gr_2})\}_p)\\
 +& 1.0\cdot\text{MMD}^2_b(\{Q_p(y_{gr_3})\}_p, \{Q_p(\hat{y}_{gr_3})\}_p)+10.0\cdot\text{MMD}^2_b(\{Q_p(R^2)\}_p, \{Q_p(\hat{R}^2)\}_p)\\
-\text{if deep_prior}& \text{ method is used: }\\
 +& 0.1\cdot\text{L2}(\{\rho_{ij}(\lambda)\}_{ij}, \{\hat{\rho}_{ij}(\lambda)\}_{ij})
 \end{align*}
 $$
 
+\text{if deep_prior}& \text{ method is used: }\\
 ### For case 2 (validity check):
 All loss components are equally weighted ($w=1.0$). $\hat{\theta}$ are retrieved from a prespecified ground truth.
 
