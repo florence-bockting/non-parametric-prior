@@ -10,6 +10,7 @@ optimization of covariance matrices.
 
 ## Model
 Normal model with one categorical, three-level predictor
+
 $$
 \begin{align*}
     \begin{split}
@@ -45,6 +46,7 @@ In moment-based elicitation, we consider the *mean*.
 ## Expert data
 Expert data are retrieved by simulating once from a pre-specified
 ground truth, whereby we assume the following independent prior distributions:
+
 $$
 \begin{align*}
 \beta &\sim \text{Mv-Normal}\left(
@@ -64,6 +66,7 @@ $$
 We weight the $R^2$ loss component by a factor of $10$ as it acts on a smaller scale than $y_{gr_i}$.
 Furthermore, we weight the correlations $\rho_{ij}$ by a factor of $0.1$ as the L2 loss yields larger loss values
 than the $\text{MMD}^2$ loss.
+
 $$
 \begin{align*}
 \mathcal{L}(\lambda) = &1.0\cdot\text{MMD}^2_b(\{Q_p(y_{gr_1})\}_p, \{Q_p(\hat{y}_{gr_1})\}_p)+
@@ -73,8 +76,10 @@ $$
 +&0.1\cdot\text{L2}(\{\rho_{ij}(\lambda)\}_{ij}, \{\hat{\rho}_{ij}(\lambda)\}_{ij})
 \end{align*}
 $$
+
 ### For case 2 (validity check):
 All loss components are equally weighted ($w=1.0$). $\hat{\theta}$ are retrieved from a prespecified ground truth.
+
 $$
 \begin{align*}
 \mathcal{L}(\lambda) = &\text{MMD}^2_b(\{Q_p(\beta_0)\}_p, \{Q_p(\hat{\beta}_0)\}_p)+
@@ -82,6 +87,7 @@ $$
 +&\text{MMD}^2_b(\{Q_p(\beta_2)\}_p, \{Q_p(\hat{\beta}_2)\}_p)+\text{MMD}^2_b(\{Q_p(\sigma)\}_p, \{Q_p(\hat{\sigma})\}_p)
 \end{align*}
 $$
+
 ## Fitting the model
 Optimization via mini-batch SGD with Adam optimizer and... 
 + initial learning rate $lr_0=0.00025$
