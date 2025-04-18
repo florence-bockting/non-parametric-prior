@@ -2,9 +2,12 @@
 /.idea/
 /results/
 /figures/manuscript/
+/manuscript_submission/
 
 # specific documents
 revision.docx
+revision_manuscript.pdf
+revision_point_by_point.pdf
 
 # specific file types
 *.pptm
