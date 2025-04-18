@@ -55,7 +55,7 @@ $$
     \right) \text{ with} \\
 \\
       \textbf{R} &= \begin{bmatrix} 
-        1. & 0.3 & -0.3 \\ 0.3 & 1. & -0.2 \\ -0.3 & -0.2 & 1. 
+        1. & 0.3 & -0.3 \\\ 0.3 & 1. & -0.2 \\\ -0.3 & -0.2 & 1. 
         \end{bmatrix} \text{ and } s = ( 2.5 , 1.3 , 0.8 )\\
 \\
     \sigma &\sim \text{Gamma}(5, 2)
