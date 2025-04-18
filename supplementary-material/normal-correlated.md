@@ -50,7 +50,8 @@ ground truth, whereby we assume the following independent prior distributions:
 $$
 \begin{align*}
 \beta &\sim \text{Mv-Normal}\left(
-    \begin{bmatrix}  10 \\ 7 \\ 2.5\end{bmatrix}, \; \text{D}(s) \, \textbf{R} \, \text{D}(s)
+    \begin{bmatrix}  10 \\\\ 7 \\\ 2.5\end{bmatrix}, 
+    \text{D}(s) \, \textbf{R} \, \text{D}(s)
     \right) \text{ with} \\
 \\
       \textbf{R} &= \begin{bmatrix} 
@@ -69,11 +70,11 @@ than the $\text{MMD}^2$ loss.
 
 $$
 \begin{align*}
-\mathcal{L}(\lambda) = &1.0\cdot\text{MMD}^2_b(\{Q_p(y_{gr_1})\}_p, \{Q_p(\hat{y}_{gr_1})\}_p)+
+\mathcal{L}(\lambda) =& 1.0\cdot\text{MMD}^2_b(\{Q_p(y_{gr_1})\}_p, \{Q_p(\hat{y}_{gr_1})\}_p)+
 1.0\cdot\text{MMD}^2_b(\{Q_p(y_{gr_2})\}_p, \{Q_p(\hat{y}_{gr_2})\}_p)\\
-+&1.0\cdot\text{MMD}^2_b(\{Q_p(y_{gr_3})\}_p, \{Q_p(\hat{y}_{gr_3})\}_p)+10.0\cdot\text{MMD}^2_b(\{Q_p(R^2)\}_p, \{Q_p(\hat{R}^2)\}_p)\\
++& 1.0\cdot\text{MMD}^2_b(\{Q_p(y_{gr_3})\}_p, \{Q_p(\hat{y}_{gr_3})\}_p)+10.0\cdot\text{MMD}^2_b(\{Q_p(R^2)\}_p, \{Q_p(\hat{R}^2)\}_p)\\
 \text{if deep_prior}& \text{ method is used: }\\
-+&0.1\cdot\text{L2}(\{\rho_{ij}(\lambda)\}_{ij}, \{\hat{\rho}_{ij}(\lambda)\}_{ij})
++& 0.1\cdot\text{L2}(\{\rho_{ij}(\lambda)\}_{ij}, \{\hat{\rho}_{ij}(\lambda)\}_{ij})
 \end{align*}
 $$
 
