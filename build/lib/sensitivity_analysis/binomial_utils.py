@@ -203,7 +203,7 @@ def run_sensitivity(
         )
 
 def prep_sensitivity_res(
-        path: str = "./results/sensitivity_analyses/"
+        path: str = "./results/deep_prior/"
 ) -> pd.DataFrame:
     """
     preprocess data from sensitivity analysis
@@ -269,18 +269,14 @@ def plot_sensitivity(df, save_fig):
                 [r"$\mu_0$", r"$\sigma_0$", r"$\mu_1$", r"$\sigma_1$"]
             )
         ]
-      #  [
-      #      axs[i, j].set_xticks(
-      #          np.stack(df_hyper[k],0), np.stack(df_hyper[k],0), #re_dig(np.stack(df_hyper[k],0)),
-      #          fontsize="x-small"
-      #      ) for i, k in enumerate(["mu0","sigma0","mu1","sigma1"])
-     # ]
         [
-            axs[i, j].tick_params(axis="x", labelsize="x-small") for i in range(4)
+            axs[i, j].set_xticks(
+                np.stack(df_hyper[k],0), re_dig(np.stack(df_hyper[k],0)),
+                fontsize="x-small"
+            ) for i, k in enumerate(["mu0","sigma0","mu1","sigma1"])
         ]
-        [
-            axs[i, j].tick_params(axis="y", labelsize="x-small") for i in range(4)
-        ]
+        [axs[i, j].tick_params(axis="y", labelsize="x-small") for
+         i in range(4)]
     [
         axs[0, j].set_title(t, pad=10, fontsize="medium")
         for j, t in enumerate(

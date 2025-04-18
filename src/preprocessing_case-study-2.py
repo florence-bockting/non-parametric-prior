@@ -29,8 +29,9 @@ for file in files:
             eliobj.history.append(eliobj2.history[0])
 
 ##### Quality flag criteria
-outlier_sd = flag_small_sd(eliobj, min_sd=0.2)
-outlier_rmse = flag_high_rmse(eliobj, max_rmse=0.2, plot=True)
+## Note: not used for simulations in paper (only for internal playing)
+outlier_sd = flag_small_sd(eliobj, min_sd=0.1)
+outlier_rmse = flag_high_rmse(eliobj, max_rmse=0.25, plot=True)
 
 outliers = np.unique(np.concatenate([outlier_sd, outlier_rmse]))
 
@@ -57,6 +58,7 @@ el.plots.prior_joint(
 el.plots.prior_averaging(
     eliobj_clean, height_ratio=[1,1], xlim_weights=0.1, figsize=(8,5),
     save_fig=f"figures/{selected_scenario}_prior_averaging.png")
+
 
 # compute average training time
 # remove first iteration as it contains compiling time etc.

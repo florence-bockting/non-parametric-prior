@@ -24,6 +24,7 @@ for file in files:
             eliobj.history.append(eliobj2.history[0])
 
 ##### Quality flag criteria
+## Note: not used for simulations in paper (only for internal playing)
 outlier_sd = flag_small_sd(eliobj, min_sd=0.07)
 outlier_rmse = flag_high_rmse(eliobj, max_rmse=0.45, plot=True)
 
@@ -36,6 +37,7 @@ eliobj_clean.history = [eliobj.history[i] for i in range(len(eliobj.history)) if
 
 el.plots.loss(
     eliobj_clean, figsize=(5,2),
+    weighted=False,
     save_fig=f"figures/{selected_scenario}_loss.png")
 el.plots.elicits(
     eliobj_clean, figsize=(5,2),

@@ -23,8 +23,10 @@ def run_prior_checks(
         seed: int, mu0: float, sigma0: float, mu1: float,
         sigma1: float, mu2: float, sigma2: float,
         alpha: float, beta: float, varying_target: str,
-        scenario: str, cor01: float, cor02: float,
-        cor12: float, skew1: float, skew2: float
+        scenario: str,
+        cor01: Optional[float],
+        cor02: Optional[float], cor12: Optional[float],
+        skew1: Optional[float], skew2: Optional[float],
 ) -> None:
     if scenario == "independent":
         ground_truth = {
@@ -143,11 +145,11 @@ def run_prior_checks(
 
     eliobj.fit()
 
-    path = (f"results/sensitivity_analyses/sensitivity_normal-{scenario}_{mu0:.2f}_{sigma0:.2f}_{mu1:.2f}_{sigma1:.2f}"
+    path = (f"sensitivity_normal-{scenario}_{mu0:.2f}_{sigma0:.2f}_{mu1:.2f}_{sigma1:.2f}"
             + f"_{mu2:.2f}_{sigma2:.2f}_{alpha:.2f}_{beta:.2f}_{skew1:.2f}_{skew2:.2f}_"
             + f"{cor01:.2f}_{cor02:.2f}_{cor12:.2f}_{varying_target}")
 
-    eliobj.save(file=path, overwrite=True)
+    eliobj.save(path, overwrite=True)
 
 
 def run_sensitivity(
@@ -161,8 +163,8 @@ def run_sensitivity(
     sigma2_seq: list[float],
     a_seq: list[float],
     b_seq: list[float],
-    cor_seq: list[float],
-    skewness_seq: list[float],
+    cor_seq: Optional[list[float]] = None,
+    skewness_seq: Optional[list[float]] = None,
 ) -> None:
     # run simulations
     for mu0 in mu0_seq:
@@ -178,9 +180,9 @@ def run_sensitivity(
             sigma2=0.8,
             alpha=5.0,
             beta=2.0,
-            cor01=0.3,
-            cor02=-0.3,
-            cor12=-0.2,
+            cor01=3.0,
+            cor02=-3.0,
+            cor12=-2.0,
             skew1=4.0,
             skew2=4.0,
         )
@@ -198,9 +200,9 @@ def run_sensitivity(
             sigma2=0.8,
             alpha=5.0,
             beta=2.0,
-            cor01=0.3,
-            cor02=-0.3,
-            cor12=-0.2,
+            cor01=3.0,
+            cor02=-3.0,
+            cor12=-2.0,
             skew1=4.0,
             skew2=4.0,
         )
@@ -218,9 +220,9 @@ def run_sensitivity(
             sigma2=0.8,
             alpha=5.0,
             beta=2.0,
-            cor01=0.3,
-            cor02=-0.3,
-            cor12=-0.2,
+            cor01=3.0,
+            cor02=-3.0,
+            cor12=-2.0,
             skew1=4.0,
             skew2=4.0,
         )
@@ -238,9 +240,9 @@ def run_sensitivity(
             sigma2=0.8,
             alpha=5.0,
             beta=2.0,
-            cor01=0.3,
-            cor02=-0.3,
-            cor12=-0.2,
+            cor01=3.0,
+            cor02=-3.0,
+            cor12=-2.0,
             skew1=4.0,
             skew2=4.0,
         )
@@ -258,9 +260,9 @@ def run_sensitivity(
             sigma2=0.8,
             alpha=5.0,
             beta=2.0,
-            cor01=0.3,
-            cor02=-0.3,
-            cor12=-0.2,
+            cor01=3.0,
+            cor02=-3.0,
+            cor12=-2.0,
             skew1=4.0,
             skew2=4.0,
         )
@@ -278,9 +280,9 @@ def run_sensitivity(
             sigma2=sigma2,
             alpha=5.0,
             beta=2.0,
-            cor01=0.3,
-            cor02=-0.3,
-            cor12=-0.2,
+            cor01=3.0,
+            cor02=-3.0,
+            cor12=-2.0,
             skew1=4.0,
             skew2=4.0,
         )
@@ -298,9 +300,9 @@ def run_sensitivity(
             sigma2=0.8,
             alpha=a,
             beta=2.0,
-            cor01=0.3,
-            cor02=-0.3,
-            cor12=-0.2,
+            cor01=3.0,
+            cor02=-3.0,
+            cor12=-2.0,
             skew1=4.0,
             skew2=4.0,
         )
@@ -325,103 +327,103 @@ def run_sensitivity(
             skew2=4.0,
         )
 
-
-    for cor in cor_seq:
-        run_prior_checks(
-            scenario=scenario,
-            seed=seed,
-            varying_target="cor01",
-            mu0=10.0,
-            sigma0=2.5,
-            mu1=7.0,
-            sigma1=1.3,
-            mu2=2.5,
-            sigma2=0.8,
-            alpha=5.0,
-            beta=2.0,
-            cor01=cor,
-            cor02=-0.3,
-            cor12=-0.2,
-            skew1=4.0,
-            skew2=4.0,
-        )
-    for cor in cor_seq:
-        run_prior_checks(
-            scenario=scenario,
-            seed=seed,
-            varying_target="cor02",
-            mu0=10.0,
-            sigma0=2.5,
-            mu1=7.0,
-            sigma1=1.3,
-            mu2=2.5,
-            sigma2=0.8,
-            alpha=5.0,
-            beta=2.0,
-            cor01=0.3,
-            cor02=cor,
-            cor12=-0.2,
-            skew1=4.0,
-            skew2=4.0,
-        )
-    for cor in cor_seq:
-        run_prior_checks(
-            scenario=scenario,
-            seed=seed,
-            varying_target="cor12",
-            mu0=10.0,
-            sigma0=2.5,
-            mu1=7.0,
-            sigma1=1.3,
-            mu2=2.5,
-            sigma2=0.8,
-            alpha=5.0,
-            beta=2.0,
-            cor01=0.3,
-            cor02=-0.3,
-            cor12=cor,
-            skew1=4.0,
-            skew2=4.0,
-        )
-
-    for skew in skewness_seq:
-        run_prior_checks(
-            scenario=scenario,
-            seed=seed,
-            varying_target="skew1",
-            mu0=10.0,
-            sigma0=2.5,
-            mu1=7.0,
-            sigma1=1.3,
-            mu2=2.5,
-            sigma2=0.8,
-            alpha=5.0,
-            beta=2.0,
-            cor01=0.3,
-            cor02=-0.3,
-            cor12=-0.2,
-            skew1=skew,
-            skew2=4.0
-        )
-    for skew in skewness_seq:
-        run_prior_checks(
-            scenario=scenario,
-            seed=seed,
-            varying_target="skew2",
-            mu0=10.0,
-            sigma0=2.5,
-            mu1=7.0,
-            sigma1=1.3,
-            mu2=2.5,
-            sigma2=0.8,
-            alpha=5.0,
-            beta=2.0,
-            cor01=0.3,
-            cor02=-0.3,
-            cor12=-0.2,
-            skew1=4.0,
-            skew2=skew,
-        )
+    if cor_seq is not None:
+        for cor in cor_seq:
+            run_prior_checks(
+                scenario=scenario,
+                seed=seed,
+                varying_target="cor01",
+                mu0=10.0,
+                sigma0=2.5,
+                mu1=7.0,
+                sigma1=1.3,
+                mu2=2.5,
+                sigma2=0.8,
+                alpha=5.0,
+                beta=2.0,
+                cor01=cor,
+                cor02=-0.3,
+                cor12=-0.2,
+                skew1=4.0,
+                skew2=4.0,
+            )
+        for cor in cor_seq:
+            run_prior_checks(
+                scenario=scenario,
+                seed=seed,
+                varying_target="cor02",
+                mu0=10.0,
+                sigma0=2.5,
+                mu1=7.0,
+                sigma1=1.3,
+                mu2=2.5,
+                sigma2=0.8,
+                alpha=5.0,
+                beta=2.0,
+                cor01=0.3,
+                cor02=cor,
+                cor12=-0.2,
+                skew1=4.0,
+                skew2=4.0,
+            )
+        for cor in cor_seq:
+            run_prior_checks(
+                scenario=scenario,
+                seed=seed,
+                varying_target="cor12",
+                mu0=10.0,
+                sigma0=2.5,
+                mu1=7.0,
+                sigma1=1.3,
+                mu2=2.5,
+                sigma2=0.8,
+                alpha=5.0,
+                beta=2.0,
+                cor01=0.3,
+                cor02=-0.3,
+                cor12=cor,
+                skew1=4.0,
+                skew2=4.0,
+            )
+    if skewness_seq is not None:
+        for skew in skewness_seq:
+            run_prior_checks(
+                scenario=scenario,
+                seed=seed,
+                varying_target="skew1",
+                mu0=10.0,
+                sigma0=2.5,
+                mu1=7.0,
+                sigma1=1.3,
+                mu2=2.5,
+                sigma2=0.8,
+                alpha=5.0,
+                beta=2.0,
+                cor01=3.0,
+                cor02=-3.0,
+                cor12=-2.0,
+                skew1=skew,
+                skew2=4.0
+            )
+        for skew in skewness_seq:
+            run_prior_checks(
+                scenario=scenario,
+                seed=seed,
+                varying_target="skew2",
+                mu0=10.0,
+                sigma0=2.5,
+                mu1=7.0,
+                sigma1=1.3,
+                mu2=2.5,
+                sigma2=0.8,
+                alpha=5.0,
+                beta=2.0,
+                cor01=3.0,
+                cor02=-3.0,
+                cor12=-2.0,
+                skew1=4.0,
+                skew2=skew,
+            )
 
 
 def prep_sensitivity_res(
@@ -432,9 +434,7 @@ def prep_sensitivity_res(
     res_dict = {
         f"{n}": [] for n in [
             "vary", "mu0", "sigma0", "mu1", "sigma1","mu2", "sigma2",
-            "alpha", "beta",
-            "skew1", "skew2","cor01", "cor02", "cor12",
-            "y_group1", "y_group2", "y_group3", "R2", "cor"
+            "alpha", "beta", "y_group1", "y_group2", "y_group3", "R2", "cor"
         ]
     }
 
@@ -445,7 +445,7 @@ def prep_sensitivity_res(
             true_elicited_statistics = sensitivity_result.results[0]["expert_elicited_statistics"]
 
             labels = file.split("_")
-            res_dict["vary"].append(labels[-1].removesuffix(".pkl"))
+            res_dict["vary"].append(labels[-2])
             res_dict["mu0"].append(float(labels[2]))
             res_dict["sigma0"].append(float(labels[3]))
             res_dict["mu1"].append(float(labels[4]))
@@ -469,35 +469,22 @@ def prep_sensitivity_res(
 
 
 def plot_sensitivity(
-    df, save_fig, scenario
+    df, save_fig
 ):
+    range_list2 = [np.sort(df[var].unique()) for var in [
+        "mu0", "sigma0", "mu1", "sigma1", "mu2", "sigma2", "alpha", "beta"]]
+    cols_quantiles = ["#21284f", "#00537b", "#007d87", "#00ac79", "#83cf4a"]
     true_vals = {
         "mu0": 10, "sigma0": 2.5, "mu1": 7, "sigma1": 1.3, "mu2": 2.5,
-        "sigma2": 0.8, "alpha": 5, "beta": 2,
+        "sigma2": 0.8, "a": 5, "b": 2,
     }
-    hypparam_list = ["mu0", "sigma0", "mu1", "sigma1", "mu2", "sigma2", "alpha", "beta"]
-    hypparam_list_name = [r"$\mu_0$", r"$\sigma_0$", r"$\mu_1$", r"$\sigma_1$", r"$\mu_2$", r"$\sigma_2$",
-                          r"$a$", r"$b$"]
-    param_list_name = [r"$\beta_0$", r"$\beta_1$", r"$\beta_2$", r"$\sigma$"]
 
-    if scenario == "skewed":
-        hypparam_list.insert(4, "skew1")
-        hypparam_list.insert(7, "skew2")
-        hypparam_list_name.insert(4, r"$\gamma_1$")
-        hypparam_list_name.insert(7, r"$\gamma_2$")
-        true_vals["skew1"] = 4
-        true_vals["skew2"] = 4
-    elif scenario == "correlated":
-        hypparam_list += [r"$\rho_{01}$", r"$\rho_{02}$", r"$\rho_{12}$"]
-        true_vals["cor01"] = 0.3
-        true_vals["cor02"] = -0.3
-        true_vals["cor12"] = -0.2
+    def re_dig(x):
+        return [x[i].astype(str).replace("0.", ".") for i in range(len(x))]
 
-    range_list2 = [np.sort(df[var].unique()) for var in hypparam_list]
-    cols_quantiles = ["#21284f", "#00537b", "#007d87", "#00ac79", "#83cf4a"]
-
-    fig, axs = plt.subplots(len(hypparam_list), 4, constrained_layout=True, figsize=(7, 9))
-    for m, k in enumerate(hypparam_list):
+    fig, axs = plt.subplots(8, 4, constrained_layout=True, figsize=(7, 9))
+    for m, k in enumerate(["mu0", "sigma0", "mu1", "sigma1", "mu2", "sigma2", "alpha",
+                           "beta"]):
 
         df_hyper = df[df["vary"] == k]
 
@@ -516,17 +503,28 @@ def plot_sensitivity(
     for j in range(4):
         [
             axs[i, j].set_xlabel(lab, fontsize="small", labelpad=2)
-            for i, lab in enumerate(hypparam_list_name)
+            for i, lab in enumerate(
+                [
+                    r"$\mu_0$",
+                    r"$\sigma_0$",
+                    r"$\mu_1$",
+                    r"$\sigma_1$",
+                    r"$\mu_2$",
+                    r"$\sigma_2$",
+                    r"$a$",
+                    r"$b$",
+                ]
+            )
         ]
         [
             axs[i, j].set_xticks(
                 range_list2[i], np.array(range_list2[i]).astype(int),
                 fontsize="x-small"
             )
-            for i in range(len(hypparam_list))
+            for i in range(8)
         ]
         [axs[i, j].tick_params(axis="y", labelsize="x-small") for
-         i in range(len(hypparam_list))]
+         i in range(8)]
     [
         axs[0, j].set_title(t, pad=10, fontsize="medium")
         for j, t in enumerate(
@@ -540,11 +538,11 @@ def plot_sensitivity(
     ]
     [
         axs[i, j].spines[["right", "top"]].set_visible(False)
-        for i, j in itertools.product(range(len(hypparam_list)), range(4))
+        for i, j in itertools.product(range(8), range(4))
     ]
-    [axs[i, -1].set_ylim(0, 1) for i in range(len(hypparam_list))]
-    [axs[i, 0].set_ylabel(" ", rotation=0, labelpad=10) for i in range(len(hypparam_list))]
-    for k, val in enumerate(hypparam_list):
+    [axs[i, -1].set_ylim(0, 1) for i in range(8)]
+    [axs[i, 0].set_ylabel(" ", rotation=0, labelpad=10) for i in range(8)]
+    for k, val in enumerate(true_vals):
         [axs[k, j].axvline(true_vals[val], color="darkred", lw=2) for
          j in range(4)]
     for i, lab, col in zip(
@@ -571,7 +569,7 @@ def plot_sensitivity(
         ],
     ):
         fig.text(i, 1.02, lab, color=col)
-    fig.suptitle(f"{scenario}-normal model", x=0.5, y=1.07)
+    fig.suptitle("independent-normal model", x=0.5, y=1.07)
     # for y in [952, 639, 323]:
     #     fig.patches.extend(
     #         [
@@ -588,14 +586,10 @@ def plot_sensitivity(
     #             )
     #         ]
     #     )
-    if scenario == "skewed":
-        loc_details = [0.89, 0.59, 0.33, 0.13]
-    else:
-       loc_details = [0.85, 0.61, 0.37, 0.13]
     for x, y, lab in zip(
         [0.005] * 4,
-        loc_details,
-        param_list_name
+        [0.85, 0.61, 0.37, 0.13],
+        [r"$\beta_0$", r"$\beta_1$", r"$\beta_2$", r"$\sigma$"],
     ):
         fig.text(
             x, y, lab, fontsize="large", bbox=dict(facecolor="none",

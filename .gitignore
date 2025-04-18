@@ -2,4 +2,10 @@
 /.idea/
 /results/
 /figures/manuscript/
+
+# specific documents
 revision.docx
+
+# specific file types
+*.pptm
+*.zip

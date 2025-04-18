@@ -1,7 +1,7 @@
 """
 run sensitivity analysis for binomial case study
 results of sensitivity analysis as published in the manuscript
-can be found on OSF: https://osf.io/xrzh6
+can be found here: PROVIDE OSF LINK
 """
 from src.sensitivity_analysis.binomial_utils import (
     run_sensitivity,
@@ -30,5 +30,4 @@ df_sim_res = prep_sensitivity_res()
 # plot results
 plot_sensitivity(
     df_sim_res,
-    save_fig="figures/binomial-sensitivity_analysis.png"
-)
+    save_fig="figures/binomial-sensitivity_analysis.png")
