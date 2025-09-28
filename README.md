@@ -2,7 +2,8 @@
 (*Code and Supplementary material*)
 
 + **preprint**: [see arXiv](https://doi.org/10.48550/arXiv.2411.15826)
-+ **status**: currently in peer-review
++ **publication**: [https://doi.org/10.1007/s11222-025-10665-z](https://doi.org/10.1007/s11222-025-10665-z)
++ **status**: accepted in Statistics and Computing
 + **additional information**: simulation results are available through [OSF]()
 
 ### About this repository
